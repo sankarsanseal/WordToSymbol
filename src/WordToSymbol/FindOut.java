@@ -1,11 +1,13 @@
 package WordToSymbol;
 import java.util.Map;
+
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.Iterator;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.lang.String;
 
 
 public class FindOut {
@@ -16,13 +18,17 @@ public class FindOut {
 		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
 		int no_of_instances;
 		int i,j,k;
+		Integer max;
 		Integer temp;
+		boolean highprobability;
 	
 		String inputstr[];
 		String symbolstr[];
 		String words[];
 		String tokens[];
 		String tempword;
+		String tempword2;
+		String tempword3;
 		String tempsym;
 		HashMap <String, Integer> htable =new HashMap<String, Integer>();
 		HashMap <String, Integer> hscount=new HashMap<String, Integer>();
@@ -30,8 +36,10 @@ public class FindOut {
 		HashMap <String, String> hmap=new HashMap<String, String>();
 		Iterator wn;
 		Iterator sn;
+		Iterator wholen;
 		Set wset;
 		Set sset;
+		Set wholeset;
 		try{
 			System.out.println("Enter number of the Sentence pairs:");
 			no_of_instances=sc.nextInt();
@@ -59,7 +67,7 @@ public class FindOut {
 							temp=htable.get(words[j].toLowerCase()+tokens[k].toLowerCase());
 							
 							temp++;
-							System.out.println(words[j].toLowerCase()+tokens[k].toLowerCase()+"->"+temp);
+							//System.out.println(words[j].toLowerCase()+tokens[k].toLowerCase()+"->"+temp);
 							
 						}
 						
@@ -78,6 +86,7 @@ public class FindOut {
 						
 					}
 					hwcount.put(words[j].toLowerCase(), temp);
+					//System.out.println(words[j].toLowerCase()+"->"+temp);
 				}
 
 				for(k=0;k<tokens.length;k++)
@@ -90,6 +99,8 @@ public class FindOut {
 				}
 				hscount.put(tokens[k].toLowerCase(), temp);
 				
+				//System.out.println(tokens[k].toLowerCase()+"->"+temp);
+				
 				}
 				
 				//System.out.println(inputstr);
@@ -101,10 +112,11 @@ public class FindOut {
 			wset=hwcount.keySet();
 			sset=hscount.keySet();
 			wn=wset.iterator();
-			sn=sset.iterator();
+			
 			while(wn.hasNext())
 			{
 				tempword=(String)wn.next();
+				sn=sset.iterator();
 				
 				while(sn.hasNext())
 				{
@@ -131,8 +143,38 @@ public class FindOut {
 			while(wn.hasNext())
 			{
 				tempword=(String)wn.next();
-				System.out.println(tempword+"->"+hmap.get(tempword));
+				System.out.print(tempword+"->"+hmap.get(tempword));
+				tempword2=tempword+hmap.get(tempword);
+				//System.out.print(tempword2);
+				if(htable.containsKey(tempword2))
+				{
+					max=htable.get(tempword2);
+					wholeset=htable.keySet();
+					wholen=wholeset.iterator();
+					highprobability=false;
+					while(wholen.hasNext())
+					{
+						tempword3=(String)wholen.next();
+						if(tempword3.contains(tempword))
+						{
+							if(htable.get(tempword3)==max &&!tempword3.equals(tempword2))
+								highprobability=true;
+						}
+							
+						
+					}
+					
+					if(highprobability)
+						System.out.print("(With high probability)");
+					else
+						System.out.print("(With probability 1)");
+					
+				}
+				
+				System.out.println();
 			}
+			
+			
 
 			sc.close();
 		
